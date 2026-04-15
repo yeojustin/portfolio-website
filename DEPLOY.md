@@ -1,21 +1,9 @@
-# Deploy (Static Frontend)
+# Deploy (GitHub Pages)
 
-This portfolio is now frontend-only (`index.html`, `styles.css`, `script.js`, `assets/`).
+This portfolio is frontend-only (`index.html`, `styles.css`, `script.js`, `assets/`).
+Deployment is handled by the GitHub Actions workflow in `.github/workflows/deploy-pages.yml`.
 
-## Option A: Netlify (fastest)
-1. Go to https://app.netlify.com/drop
-2. Drag the project folder into the page
-3. Netlify will deploy immediately and give you a URL
-
-## Option B: Vercel
-1. Go to https://vercel.com/new
-2. Import/select this project
-3. Framework preset: **Other**
-4. Build command: leave empty
-5. Output directory: leave empty (root)
-6. Deploy
-
-## Option C: GitHub Pages (recommended for this repo)
+## GitHub Pages deployment
 1. Create a new empty GitHub repository.
 2. Initialize and push this folder:
    ```bash
@@ -34,6 +22,6 @@ This portfolio is now frontend-only (`index.html`, `styles.css`, `script.js`, `a
 
 ## Local preview
 ```bash
-npm run dev
+python3 -m http.server 8080
 ```
-Open: `http://localhost:8000`
+Open: `http://localhost:8080`
