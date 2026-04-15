@@ -1,0 +1,55 @@
+import os
+from github import Github
+from google.adk.agents import LlmAgent
+from google.adk.tools import VertexAiSearchTool
+
+def read_github_file(repo_name: str, file_path: str) -> str:
+    """
+    Reads the live contents of a file from my GitHub repositories.
+    Use this tool when the user asks for specific, up-to-date code examples.
+    """
+    try:
+        gh = Github(os.getenv("GITHUB_TOKEN"))
+        repo = gh.get_repo(f"your-github-username/{repo_name}") 
+        file_content = repo.get_contents(file_path)
+        return f"File Content:\n```\n{file_content.decoded_content.decode('utf-8')}\n```"
+    except Exception as e:
+        return f"Error retrieving file: {str(e)}"
+
+def list_my_github_repos() -> str:
+    """Retrieves a list of all my public GitHub repositories."""
+    try:
+        gh = Github(os.getenv("GITHUB_TOKEN"))
+        user = gh.get_user("your-github-username")
+        repos = [repo.name for repo in user.get_repos() if not repo.private]
+        return "My Repositories: " + ", ".join(repos)
+    except Exception as e:
+        return f"Error retrieving repos: {str(e)}"
+
+# --- 2. RAG Tool Definition ---
+portfolio_rag_tool = VertexAiSearchTool(
+    data_store_id=os.getenv("DATA_STORE_ID"),
+    project_id=os.getenv("GOOGLE_CLOUD_PROJECT"),
+    location=os.getenv("GOOGLE_CLOUD_LOCATION", "global")
+)
+
+# --- 3. Update the Agent ---
+root_agent = LlmAgent(
+    name="PortfolioAssistant",
+    model="gemini-2.5-flash",
+    description="A specialist assistant that answers questions about my portfolio.",
+    instruction="""You are a helpful, professional assistant for my portfolio website.
+    
+    CRITICAL RULES:
+    1. First, use 'VertexAiSearchTool' for general background, experience, and project summaries.
+    2. If the user asks about my live repositories, use 'list_my_github_repos' to see what I have built.
+    3. If the user asks to see specific code, use 'read_github_file' to fetch the live code snippet directly from GitHub.
+    4. Base all technical answers on the retrieved data.""",
+    
+    # ADK automatically converts standard Python functions into FunctionTools
+    tools=[
+        portfolio_rag_tool, 
+        list_my_github_repos, 
+        read_github_file
+    ] 
+)
