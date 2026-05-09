@@ -1,0 +1,23 @@
+<div class="prose prose-invert max-w-none text-sm text-gray-300">
+  <h2 class="text-2xl font-bold mb-4 text-white">Order Book Price Movement Predictor</h2>
+  <img src="assets/1st_demo.gif" alt="TUI Demo" class="w-full rounded-lg mb-8 border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]" />
+
+  <h3 class="text-lg font-bold mb-2 text-white">The Goal</h3>
+  <p class="mb-6 leading-relaxed">
+    The primary goal of this project is to predict short-horizon Bitcoin (BTC) price direction by analyzing real-time Binance Level-2 order book data. High-frequency algorithmic trading relies heavily on understanding market microstructure—knowing exactly where liquidity rests and how aggressively it is being consumed. By engineering specialized features like order book imbalance (obi), spread, and depth skew, this pipeline anticipates micro-price movements before they occur.
+  </p>
+
+  <h3 class="text-lg font-bold mb-2 text-white">System Design & Architecture</h3>
+  <p class="mb-6 leading-relaxed">
+    Rather than a simple static script, this application is designed as a end-to-end proof of concept for continuous learning pipeline. It features a multi-symbol raw data collector that streams websocket data and feeds it into a modular transformation engine. The core of the system operates in two main runtime modes: a live inference mode that scores every single tick using the latest machine learning artifac that was trained prior with XGBoost and PyTorch, and a batch mode for historical validation (which is currently still under work in progress).
+  </p>
+
+  <h3 class="text-lg font-bold mb-2 text-white">Drift-Triggered Auto-Training</h3>
+  <p class="mb-6 leading-relaxed">
+    One of the standout design choices in this architecture is the "drift-triggered auto-train" mechanism where you can flag it to use it upon starting the app. 
+    <br></br>
+    Cryptocurrency markets are highly volatile, and statistical edges decay rapidly when the market regime changes. To combat this, the pipeline continuously monitors for feature-distribution drift during live operation. If the incoming live data statistically deviates past a set threshold compared to the baseline training data, the system autonomously triggers a model retrain, ensuring the predictive engine remains razor-sharp without manual intervention.
+  </p>
+
+  <a href="https://github.com/yeojustin/OrderBook-Price-Direction-Predictor" target="_blank" class="mt-4 text-white font-bold underline hover:text-gray-300 transition-colors"> Visit the Github Repo and try it out yourself! </a>
+</div>

@@ -1,193 +1,25 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: auto;
 }
 
-.font-inter {
-  font-family: "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+/* File icons */
+.icon-folder {
+  color: #f8d775;
 }
 
-.tech-pane {
-  --mx: 50%;
-  --my: 50%;
+.icon-doc {
+  color: #4b96e6;
 }
 
-.tech-pane::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(360px circle at var(--mx) var(--my), rgba(125, 211, 252, 0.28), transparent 62%),
-    radial-gradient(280px circle at calc(var(--mx) + 12%) calc(var(--my) - 10%), rgba(196, 181, 253, 0.2), transparent 65%);
-  transition: opacity 0.2s ease;
-  z-index: 0;
+.icon-pdf {
+  color: #e64b4b;
 }
 
-.tech-pane::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.14) 1px, transparent 1px);
-  background-size: 26px 26px;
-  mask-image: radial-gradient(circle at var(--mx) var(--my), black 8%, transparent 55%);
-  opacity: 0.35;
-  z-index: 0;
-}
-
-.icon-chip {
-  width: 40px;
-  height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  background: rgba(255, 255, 255, 0.95);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-}
-
-.icon-chip img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.icon-chip:hover {
-  transform: translateY(-1px);
-  border-color: #94a3b8;
-  box-shadow: 0 8px 16px rgba(30, 41, 59, 0.1);
-}
-
-.fx-blob {
-  position: absolute;
-  width: 280px;
-  height: 280px;
-  border-radius: 999px;
-  filter: blur(36px);
-  pointer-events: none;
-  opacity: 0.45;
-  animation: floatBlob 8s ease-in-out infinite;
-}
-
-.fx-blob-left {
-  top: -120px;
-  right: -90px;
-  background: radial-gradient(circle, #7dd3fc 0%, transparent 70%);
-}
-
-.fx-blob-right {
-  bottom: -120px;
-  right: -80px;
-  background: radial-gradient(circle, #c4b5fd 0%, transparent 70%);
-  animation-delay: 1.2s;
-}
-
-.chat-message {
-  max-width: 82%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.45;
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
-  animation: popIn 0.2s ease;
-}
-
-.chat-message.user {
-  align-self: flex-end;
-  border: 1px solid #bfdbfe;
-  background: #eff6ff;
-  color: #1e3a8a;
-}
-
-.chat-message.bot {
-  align-self: flex-start;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  color: #334155;
-}
-
-.chat-message a {
-  color: #2563eb;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-h1 {
-  letter-spacing: -0.02em;
-}
-
-#leftPane h1 + p,
-#leftPane article,
-#leftPane .mt-5.text-sm.leading-6 {
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-#leftPane .mt-4.flex.flex-wrap.gap-2 span {
-  border-radius: 6px !important;
-  border-color: #cbd5e1 !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11px !important;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-#clearChatBtn,
-#helloBtn,
-#chatForm button,
-#chatInput {
-  border-radius: 8px !important;
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-#chatForm button {
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
-}
-
-#chatBody {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#chatBody::-webkit-scrollbar {
-  width: 8px;
-}
-
-#chatBody::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 999px;
-}
-
-.starter-wrap {
-  min-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes floatBlob {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(16px);
-  }
+.icon-link {
+  color: #4be6a3;
 }

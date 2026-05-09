@@ -1,0 +1,26 @@
+<div class="prose prose-invert max-w-none text-sm text-gray-300">
+  <h2 class="text-2xl font-bold mb-4 text-white">L2 Depth & Quoting Simulator</h2>
+  <img src="assets/l2_sim_demo.gif" alt="Simulator TUI Demo" onerror="this.style.display='none'" class="w-full rounded-lg mb-8 border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]" />
+
+  <h3 class="text-lg font-bold mb-2 text-white">The Goal</h3>
+  <p class="mb-6 leading-relaxed">
+    I built this project to watch how the Bid-Ask spread moves in real-time and to understand order book mechanics without risking actual money. It serves as a local testing ground where I can try out different quoting ideas and see how they would perform against live market data before ever placing a real trade.
+  </p>
+
+  <h3 class="text-lg font-bold mb-2 text-white">How It Works</h3>
+  <p class="mb-6 leading-relaxed">
+    The simulator bridges real market data with a local execution engine:
+    <ul class="list-disc list-inside mt-2 space-y-2 text-gray-300">
+      <li><strong>Live Sync:</strong> It maintains a local Binance Spot L2 order book by pulling an initial REST snapshot and applying WebSocket depth diffs on top of it.</li>
+      <li><strong>Simulation:</strong> It runs a local simulation on that live book. It computes order book imbalance (OBI), generates virtual quotes, tracks theoretical inventory, and processes fake fills whenever the quotes cross the real touch price.</li>
+      <li><strong>Terminal UI:</strong> Everything is visualized in the terminal using <code class="bg-white/10 px-1.5 py-0.5 rounded text-xs text-pink-300">Rich</code>, giving a clear, tick-by-tick view of the order book and the simulated trades.</li>
+    </ul>
+  </p>
+  <br></br>
+  <h3 class="text-lg font-bold mb-2 text-white">Under the Hood</h3>
+  <p class="mb-6 leading-relaxed">
+    The project is written entirely in Python. To handle the high volume of websocket messages without lagging behind, it relies heavily on Python's <code class="bg-white/10 px-1.5 py-0.5 rounded text-xs text-pink-300">asyncio</code>. I also structured the codebase to decouple the book synchronization loop from the actual simulation logic, making it much easier to swap out or tweak trading strategies later on.
+  </p>
+
+  <a href="https://github.com/yeojustin/L2-Order-Book-Quote-Simulator" target="_blank" class="mt-4 text-white font-bold underline hover:text-gray-300 transition-colors"> Check out the code on GitHub! </a>
+</div>
