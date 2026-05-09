@@ -138,7 +138,7 @@ function openItem(item) {
     const targetNav = document.querySelector(`[data-target="${item.target}"]`);
     if (targetNav) targetNav.click();
     else renderFolder(item.target);
-  } else if (item.type === 'link') {
+  } else if (['link', 'email', 'linkedin', 'github', 'medium'].includes(item.type)) {
     window.open(EXTERNAL_LINKS[item.target], '_blank');
   } else {
     // Open modal

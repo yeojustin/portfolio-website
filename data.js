@@ -62,9 +62,10 @@ const portfolioData = {
     { type: 'doc', name: 'hackathon_tips.md', target: 'modal_blog_hack', date: '2026-02-05', size: '6 KB' }
   ],
   contact: [
-    { type: 'link', name: 'Email.url', target: 'link_email', date: '2026-01-01', size: '1 KB' },
-    { type: 'link', name: 'LinkedIn.url', target: 'link_linkedin', date: '2026-01-01', size: '1 KB' },
-    { type: 'link', name: 'GitHub.url', target: 'link_github', date: '2026-01-01', size: '1 KB' }
+    { type: 'email', name: 'Email Me!', target: 'link_email', date: '2026-01-01', size: '1 KB' },
+    { type: 'linkedin', name: 'LinkedIn', target: 'link_linkedin', date: '2026-01-01', size: '1 KB' },
+    { type: 'github', name: 'GitHub', target: 'link_github', date: '2026-01-01', size: '1 KB' },
+    { type: 'medium', name: 'Medium', target: 'link_medium', date: '2026-01-01', size: '1 KB' }
   ]
 };
 
@@ -191,6 +192,7 @@ Currently exploring Algorithmic trading tools, Agentic Workflows, GenAI, and bui
 const EXTERNAL_LINKS = {
   link_email: "mailto:yeojustinnn@gmail.com",
   link_linkedin: "https://www.linkedin.com/in/justinyeo177",
-  link_github: "https://github.com/yeojustin"
+  link_github: "https://github.com/yeojustin",
+  link_medium: "https://medium.com/@unemployedbanana"
 };
 

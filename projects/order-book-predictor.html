@@ -19,5 +19,10 @@
     Cryptocurrency markets are highly volatile, and statistical edges decay rapidly when the market regime changes. To combat this, the pipeline continuously monitors for feature-distribution drift during live operation. If the incoming live data statistically deviates past a set threshold compared to the baseline training data, the system autonomously triggers a model retrain, ensuring the predictive engine remains razor-sharp without manual intervention.
   </p>
 
+  <h3 class="text-lg font-bold mb-2 text-white">Key Results and Performance</h3>
+  <p class="mb-6 leading-relaxed">
+    The baseline XGBoost model achieved 53.2% accuracy in predicting the next tick's direction (higher than the 50% random guess), with AUC of 0.530. It also demonstrated strong performance on classifying large price moves, hitting 72.8% accuracy on >0.01% directional change prediction and 68.6% on >0.02% moves. These metrics provide a solid foundation for the ongoing enhancement work. Future work would be to increase the model's sophistication (e.g. deep learning models) and expand the feature engineering set.
+  </p>
+
   <a href="https://github.com/yeojustin/OrderBook-Price-Direction-Predictor" target="_blank" class="mt-4 text-white font-bold underline hover:text-gray-300 transition-colors"> Visit the Github Repo and try it out yourself! </a>
 </div>
