@@ -214,10 +214,23 @@ function renderProject(project) {
           <div class="flex flex-wrap items-center gap-3 text-sm font-medium">
             <span class="px-3 py-1 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 rounded-full shadow-inner">${project.category || 'App'}</span>
             <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>
-            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full shadow-inner flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              ${project.status || 'Live'}
-            </span>
+            ${(() => {
+              const colors = {
+                green: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20', dot: 'bg-emerald-400' },
+                red: { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20', dot: 'bg-red-400' },
+                orange: { bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/20', dot: 'bg-orange-400' },
+                blue: { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20', dot: 'bg-blue-400' },
+                yellow: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/20', dot: 'bg-yellow-400' },
+                gray: { bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20', dot: 'bg-gray-400' }
+              };
+              const c = colors[project.statusColor] || colors.green;
+              return `
+                <span class="px-3 py-1 ${c.bg} ${c.text} border ${c.border} rounded-full shadow-inner flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full ${c.dot} animate-pulse"></span>
+                  ${project.status || 'Live'}
+                </span>
+              `;
+            })()}
           </div>
         </div>
       </div>

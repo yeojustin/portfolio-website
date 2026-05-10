@@ -1,0 +1,37 @@
+<div class="prose prose-invert max-w-none text-sm text-gray-300">
+  <h2 class="text-2xl font-bold mb-4 text-white">ArchGen — Agentic Architecture Diagram Generator</h2>
+  <img src="assets/archgen.png" alt="ArchGen Showcase" class="w-full rounded-lg mb-8 border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]" />
+
+  <h3 class="text-lg font-bold mb-2 text-white">The Goal & Problem</h3>
+  <p class="mb-6 leading-relaxed">
+    Building complex AI agents and systems often requires a "Big Picture" first. Jumping straight into code without a clear architecture leads to messy logic and integration headaches. ArchGen bridges the gap between idea and implementation, providing a visual and documented "source of truth" before you write a single line of application code.
+  </p>
+  <br>
+  <h3 class="text-lg font-bold mb-2 text-white">How It Works</h3>
+  <p class="mb-6 leading-relaxed">
+    ArchGen uses a <strong>Sequential Agentic Workflow</strong> powered by Google ADK:
+    <ul class="list-disc pl-5 mt-2 space-y-2">
+      <li><strong>The Architect</strong>: Analyzes your requirement and designs a structured system graph.</li>
+      <li><strong>The XML Coder</strong>: Converts that graph into Draw.io XML for professional editing.</li>
+      <li><strong>The Blueprint Writer</strong>: Generates a comprehensive Markdown technical proposal.</li>
+    </ul>
+  </p>
+  <br>
+  <h3 class="text-lg font-bold mb-2 text-white">Key Features</h3>
+  <p class="mb-6 leading-relaxed">
+    <ul class="list-disc pl-5 mt-2 space-y-2">
+      <li><strong>Guided Prompting</strong>: Start quickly with templates and suggestion chips.</li>
+      <li><strong>Smart Canvas</strong>: Powered by React Flow with snap-to-grid and auto-layout (Dagre).</li>
+      <li><strong>Bring Your Own Key (BYOK)</strong>: Securely use your own Gemini API quota via session-based key input.</li>
+      <li><strong>Multi-Format Export</strong>: Export to PNG, XML (Draw.io), and Styled PDF blueprints.</li>
+      <li><strong>Version History</strong>: Automatically tracks every generation so you never lose a design.</li>
+    </ul>
+  </p>
+  <br>
+  <h3 class="text-lg font-bold mb-2 text-white">Tech Stack</h3>
+  <p class="mb-6 leading-relaxed">
+    Built with <strong>FastAPI</strong>, <strong>React Flow</strong>, <strong>Google Gemini</strong>, and <strong>Google ADK</strong>.
+  </p>
+  <br>
+  <a href="https://github.com/yeojustin/Archgen-Agentic-Architecture-Diagram-Generator" target="_blank" class="mt-4 text-white font-bold underline hover:text-gray-300 transition-colors"> Visit the Github Repo </a>
+</div>
