@@ -16,7 +16,7 @@ const portfolioData = {
       status: 'Not Live Yet, able to run locally!',
       statusColor: 'orange',
       description: 'An agentic AI workflow that transforms natural language descriptions into professional architecture diagrams and detailed blueprints. Powered by Google ADK.',
-      stack: ['FastAPI', 'React Flow', 'Google Gemini', 'Google ADK', 'Agentic Workflows'],
+      stack: ['FastAPI', 'React Flow', 'Gemini', 'Google ADK', 'Agentic Workflows'],
       date: '2026-05-11',
       appUrl: '',
       githubUrl: 'https://github.com/yeojustin/Archgen-Agentic-Architecture-Diagram-Generator',
