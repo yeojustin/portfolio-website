@@ -1,6 +1,10 @@
 // State
 let currentFolder = 'home';
 let selectedItem = null;
+let navHistory = ['home'];
+let navHistoryIndex = 0;
+let isNavigatingHistory = false;
+let currentProject = null;
 
 // DOM Elements
 const contentPane = document.getElementById('content-pane');
@@ -16,50 +20,166 @@ const modalTitle = document.getElementById('modal-title');
 const modalIcon = document.getElementById('modal-icon');
 const modalClose = document.getElementById('modal-close');
 const navBackBtn = document.getElementById('nav-back-btn');
+const navForwardBtn = document.getElementById('nav-forward-btn');
+const navUpBtn = document.getElementById('nav-up-btn');
 
 // Initialize
 function init() {
-  renderFolder('home');
-  
-  navItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const target = item.dataset.target;
-      renderFolder(target);
-      
-      // Update active state
-      navItems.forEach(n => { n.classList.remove('active', 'bg-white/10', 'text-white'); });
-      item.classList.add('active', 'bg-white/10', 'text-white');
-    });
-  });
-
   // Modal close
   modalClose.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
   });
+
+  // History navigation buttons
+  if (navBackBtn) {
+    navBackBtn.addEventListener('click', () => {
+      if (navHistoryIndex > 0) {
+        navHistoryIndex--;
+        isNavigatingHistory = true;
+        navigateToState(navHistory[navHistoryIndex], false);
+        isNavigatingHistory = false;
+      }
+    });
+  }
+
+  if (navForwardBtn) {
+    navForwardBtn.addEventListener('click', () => {
+      if (navHistoryIndex < navHistory.length - 1) {
+        navHistoryIndex++;
+        isNavigatingHistory = true;
+        navigateToState(navHistory[navHistoryIndex], false);
+        isNavigatingHistory = false;
+      }
+    });
+  }
+
+  if (navUpBtn) {
+    navUpBtn.addEventListener('click', () => {
+      if (currentProject) {
+        navigateToState('projects');
+      } else if (currentFolder !== 'home') {
+        navigateToState('home');
+      }
+    });
+  }
+
+  // Sidebar navigation click
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const target = item.dataset.target;
+      navigateToState(target);
+    });
+  });
+
+  // Setup breadcrumbs click to go home
+  const breadcrumbHome = document.getElementById('breadcrumb-home');
+  const breadcrumbUser = document.getElementById('breadcrumb-user');
+  if (breadcrumbHome) {
+    breadcrumbHome.addEventListener('click', () => navigateToState('home'));
+  }
+  if (breadcrumbUser) {
+    breadcrumbUser.addEventListener('click', () => navigateToState('home'));
+  }
+
+  // Setup search input
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', handleSearch);
+  }
+
+  // Initial load
+  navigateToState('home', false);
+}
+
+function navigateToState(state, push = true) {
+  // Clear search input on navigation
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.value = '';
+  }
+
+  if (push && !isNavigatingHistory) {
+    navHistory = navHistory.slice(0, navHistoryIndex + 1);
+    
+    const lastState = navHistory[navHistoryIndex];
+    const isNew = typeof state === 'string'
+      ? (lastState !== state)
+      : (!lastState || lastState.name !== state.name);
+
+    if (isNew) {
+      navHistory.push(state);
+      navHistoryIndex = navHistory.length - 1;
+    }
+  }
+
+  if (typeof state === 'string') {
+    currentProject = null;
+    renderFolder(state);
+    
+    // Update active sidebar state
+    navItems.forEach(n => {
+      if (n.dataset.target === state) {
+        n.classList.add('active', 'bg-white/10', 'text-white');
+      } else {
+        n.classList.remove('active', 'bg-white/10', 'text-white');
+      }
+    });
+  } else {
+    currentProject = state;
+    renderProject(state);
+    
+    // Highlight "Projects" in sidebar
+    navItems.forEach(n => {
+      if (n.dataset.target === 'projects') {
+        n.classList.add('active', 'bg-white/10', 'text-white');
+      } else {
+        n.classList.remove('active', 'bg-white/10', 'text-white');
+      }
+    });
+  }
+
+  updateNavButtons();
+}
+window.navigateToState = navigateToState;
+
+function updateNavButtons() {
+  if (navBackBtn) {
+    navBackBtn.disabled = navHistoryIndex <= 0;
+  }
+  if (navForwardBtn) {
+    navForwardBtn.disabled = navHistoryIndex >= navHistory.length - 1;
+  }
+  if (navUpBtn) {
+    navUpBtn.disabled = (currentFolder === 'home' && !currentProject);
+  }
+}
+
+function handleSearch(e) {
+  const query = e.target.value.toLowerCase().trim();
+  if (currentProject) return;
   
-  // Initially select Home
-  document.querySelector('[data-target="home"]').click();
+  const items = portfolioData[currentFolder] || [];
+  const filtered = items.filter(item => 
+    item.name.toLowerCase().includes(query) || 
+    (item.description && item.description.toLowerCase().includes(query)) ||
+    (item.type && item.type.toLowerCase().includes(query))
+  );
+
+  contentPane.innerHTML = '';
+  if (filtered.length === 0) {
+    contentPane.innerHTML = `<div class="text-center text-gray-500 mt-10 w-full">No items match your search.</div>`;
+  } else {
+    renderIconView(filtered);
+  }
+
+  statusItemCount.textContent = `${filtered.length} items`;
+  statusSelected.textContent = '0 items selected';
 }
 
 function renderFolder(folderName) {
   currentFolder = folderName;
   const items = portfolioData[folderName] || [];
-  
-  // Disable back button only if we are in 'home'
-  if (navBackBtn) {
-    if (folderName === 'home') {
-      navBackBtn.disabled = true;
-      navBackBtn.onclick = null;
-    } else {
-      navBackBtn.disabled = false;
-      navBackBtn.onclick = () => {
-        const homeBtn = document.querySelector('[data-target="home"]');
-        if (homeBtn) homeBtn.click();
-        else renderFolder('home');
-      };
-    }
-  }
   
   // Update UI
   const displayName = folderName.charAt(0).toUpperCase() + folderName.slice(1);
@@ -78,66 +198,77 @@ function renderFolder(folderName) {
     contentPane.innerHTML = `<div class="text-center text-gray-500 mt-10 w-full">This folder is empty.</div>`;
     return;
   }
-  
-  const grid = document.createElement('div');
-  grid.className = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 w-full';
-  
-  items.forEach((item, index) => {
-    const el = document.createElement('div');
-    el.className = 'file-item flex flex-col items-center justify-start p-3 cursor-pointer text-center select-none border border-transparent hover:bg-white/5 hover:border-white/10 rounded-lg transition-all';
-    el.dataset.index = index;
-    
-    const iconHtml = item.isProject 
-      ? `<div class="text-6xl flex items-center justify-center w-full h-full border border-white/10 bg-white/5 rounded-xl shadow-inner">${item.iconEmoji}</div>` 
-      : (icons[item.type] || icons.doc);
-    
-    el.innerHTML = `
-      <div class="w-28 h-28 flex items-center justify-center mb-3 text-gray-200 drop-shadow-lg">
-        ${iconHtml}
-      </div>
-      <span class="text-[14px] font-medium text-gray-300 break-words w-full px-1 line-clamp-2 leading-tight drop-shadow-sm">${item.name}</span>
-    `;
-    
-    // Selection logic
-    el.addEventListener('click', (e) => {
-      document.querySelectorAll('.file-item').forEach(f => {
-        f.classList.remove('selected', 'bg-white/10', 'border-white/20');
-        f.querySelector('span').classList.remove('text-white');
-      });
-      el.classList.add('selected', 'bg-white/10', 'border-white/20');
-      el.querySelector('span').classList.add('text-white');
-      statusSelected.textContent = '1 item selected';
-      e.stopPropagation(); // Prevent unselecting
-    });
-    
-    // Double click to open
-    el.addEventListener('dblclick', () => {
-      openItem(item);
-    });
 
-    grid.appendChild(el);
-  });
-  
-  contentPane.appendChild(grid);
+  // Use Icon View by default
+  renderIconView(items);
   
   // Click outside to unselect
   contentPane.addEventListener('click', () => {
     document.querySelectorAll('.file-item').forEach(f => {
       f.classList.remove('selected', 'bg-white/10', 'border-white/20');
-      f.querySelector('span').classList.remove('text-white');
+      if (f.querySelector('span')) f.querySelector('span').classList.remove('text-white');
     });
     statusSelected.textContent = '0 items selected';
   });
 }
 
+function renderIconView(items) {
+  contentPane.className = 'flex-1 overflow-y-auto p-6 text-gray-200';
+  
+  const grid = document.createElement('div');
+  grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full';
+  
+  items.forEach((item, index) => {
+    const el = document.createElement('div');
+    el.className = 'file-item flex flex-col items-center justify-start p-4 cursor-pointer text-center select-none border border-transparent hover:bg-white/5 hover:border-white/10 rounded-xl transition-all group';
+    el.dataset.index = index;
+    
+    // Icon Style
+    const iconHtml = item.isProject 
+      ? `<div class="text-5xl flex items-center justify-center w-20 h-20 border border-white/10 bg-white/5 rounded-2xl shadow-inner group-hover:scale-105 transition-transform duration-300">${item.iconEmoji || '📁'}</div>` 
+      : `<div class="text-gray-400 group-hover:text-white transition-all shrink-0">${icons[item.type] || icons.doc}</div>`;
+    
+    el.innerHTML = `
+      <div class="w-24 h-24 flex items-center justify-center mb-3 text-gray-200 drop-shadow-lg">
+        ${iconHtml}
+      </div>
+      <span class="text-[13px] font-semibold text-gray-300 break-words w-full px-1 line-clamp-2 leading-tight group-hover:text-white transition-colors">${item.name}</span>
+    `;
+    
+    setupItemListeners(el, item);
+    grid.appendChild(el);
+  });
+  
+  contentPane.appendChild(grid);
+}
+
+function setupItemListeners(el, item) {
+  // Selection logic
+  el.addEventListener('click', (e) => {
+    document.querySelectorAll('.file-item').forEach(f => {
+      f.classList.remove('selected', 'bg-white/10', 'border-white/20');
+      const span = f.querySelector('span');
+      if (span) span.classList.remove('text-white');
+    });
+    el.classList.add('selected', 'bg-white/10', 'border-white/20');
+    const span = el.querySelector('span');
+    if (span) span.classList.add('text-white');
+    statusSelected.textContent = '1 item selected';
+    e.stopPropagation();
+  });
+  
+  // Double click to open
+  el.addEventListener('dblclick', () => {
+    openItem(item);
+  });
+}
+
 function openItem(item) {
   if (item.isProject) {
-    renderProject(item);
+    incrementViews(item.name);
+    navigateToState(item);
   } else if (item.type === 'folder') {
-    // Navigate to folder
-    const targetNav = document.querySelector(`[data-target="${item.target}"]`);
-    if (targetNav) targetNav.click();
-    else renderFolder(item.target);
+    navigateToState(item.target);
   } else if (['link', 'email', 'linkedin', 'github', 'medium'].includes(item.type)) {
     window.open(EXTERNAL_LINKS[item.target], '_blank');
   } else {
@@ -176,12 +307,23 @@ function closeModal() {
   }, 200);
 }
 
+// View Tracking Utilities
+function getViews(projectName) {
+  const views = localStorage.getItem(`views_${projectName}`);
+  return views ? parseInt(views) : 0;
+}
+
+function incrementViews(projectName) {
+  const current = getViews(projectName);
+  localStorage.setItem(`views_${projectName}`, current + 1);
+}
+
 // Start
 document.addEventListener('DOMContentLoaded', init);
 
 function renderProject(project) {
   // Update Path
-  currentPathEl.innerHTML = `<span class="hover:bg-white/10 px-1 rounded cursor-pointer transition-colors" onclick="document.querySelector('[data-target=\\'projects\\']').click()">Projects</span> 
+  currentPathEl.innerHTML = `<span class="hover:bg-white/10 px-1 rounded cursor-pointer transition-colors" onclick="navigateToState('projects')">Projects</span> 
     <span class="text-gray-500 px-1">/</span> 
     <span class="text-gray-200 font-medium px-1">${project.name}</span>`;
   
@@ -190,14 +332,6 @@ function renderProject(project) {
   }
   statusItemCount.textContent = '1 item';
   statusSelected.textContent = '0 items selected';
-
-  // Enable back button
-  if (navBackBtn) {
-    navBackBtn.disabled = false;
-    navBackBtn.onclick = () => {
-      document.querySelector('[data-target="projects"]').click();
-    };
-  }
 
   contentPane.innerHTML = `
     <div class="max-w-5xl mx-auto pb-10 w-full animate-popIn">
@@ -213,7 +347,6 @@ function renderProject(project) {
           <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tight mb-3">${project.name}</h1>
           <div class="flex flex-wrap items-center gap-3 text-sm font-medium">
             <span class="px-3 py-1 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 rounded-full shadow-inner">${project.category || 'App'}</span>
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>
             ${(() => {
               const colors = {
                 green: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20', dot: 'bg-emerald-400' },
@@ -226,7 +359,6 @@ function renderProject(project) {
               const c = colors[project.statusColor] || colors.green;
               return `
                 <span class="px-3 py-1 ${c.bg} ${c.text} border ${c.border} rounded-full shadow-inner flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full ${c.dot} animate-pulse"></span>
                   ${project.status || 'Live'}
                 </span>
               `;

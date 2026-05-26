@@ -1,0 +1,77 @@
+<div class="prose prose-invert max-w-none text-sm text-gray-300">
+  <h2 class="text-2xl font-bold mb-4 text-white">Live Binance Order Book & OBI Dashboard</h2>
+  <img src="assets/OBI-Demo.gif" alt="OBI Dashboard Demo" class="w-full rounded-lg mb-8 border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]" />
+
+  <h3 class="text-lg font-bold mb-2 text-white">The Project Goal</h3>
+  <p class="mb-6 leading-relaxed">
+    The goal of this project is to build an high-fidelity, institutional-grade market data pipeline that clones a live cryptocurrency trading order book directly from Binance onto a local machine. By stitching two independent data feeds together perfectly, the system eliminates data delay and accurately calculates <strong>Order Book Imbalance (OBI)</strong>—a vital mathematical indicator used by high-frequency trading algorithms to spot immediate buy or sell pressure before price changes happen.
+  </p>
+  <br>
+
+  <h3 class="text-lg font-bold mb-2 text-white">Core Trading Terms Explained</h3>
+  <p class="mb-6 leading-relaxed">
+    To understand this system, you must first understand how modern electronic financial exchanges operate under the hood:
+    <div class="mt-2 space-y-3">
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Order Book</strong>: A real-time, ledger listing all open, unexecuted instructions from traders waiting to buy or sell an asset (like Bitcoin). It is the transparent heart of an exchange.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Bids (Buyers)</strong>: Orders placed by traders wanting to purchase an asset. These sit on the bottom half of the ledger and are ranked from highest price to lowest price.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Asks / Offers (Sellers)</strong>: Orders placed by traders wanting to sell their asset. These sit on the top half of the ledger and are ranked from lowest price to highest price.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>The Spread</strong>: The narrow gap between the highest available buy order (Best Bid) and the lowest available sell order (Best Ask). No trade happens unless someone crosses this gap.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Market Liquidity & Depth</strong>: The raw amount of volume (number of coins) sitting in the book at various price levels. Deep books require massive cash to move the price; shallow books crash or spike easily.</div></div>
+    </div>
+  </p>
+  <br>
+
+  <h3 class="text-lg font-bold mb-2 text-white">The Engineering Challenge: Data Drift</h3>
+  <p class="mb-6 leading-relaxed">
+    Cryptocurrency exchanges handle billions of updates a second. To save network bandwidth, Binance does not broadcast the full order book every millisecond. Instead, they require developers to engage in a complex multi-step data integration technique:
+    <div class="mt-2 space-y-2">
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>The REST Snapshot</strong>: A single heavy, explicit HTTP request that fetches a fixed snapshot of the entire order book. The problem? It is already outdated the instant it reaches your machine.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>The WebSocket Diff Stream</strong>: A continuous, live stream of tiny delta patches ("Price X changed size to Y"). The problem? If you don't have the baseline snapshot, these changes mean nothing.</div></div>
+    </div>
+    <span class="block mt-4 text-gray-400 italic">
+      If your code misses or misinterprets even a single update message, your local replica suffers from <strong>Data Drift</strong>—a fatal state where your database drifts away from reality, meaning your mathematical indicators are calculating complete lies.
+    </span>
+  </p>
+  <br>
+
+  <h3 class="text-lg font-bold mb-2 text-white">How It Works Under the Hood</h3>
+  <p class="mb-6 leading-relaxed">
+    The backend architecture utilizes Python's asynchronous event loops to implement Binance's exact multi-phase local order book management protocol:
+    <div class="mt-2 space-y-2">
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Phase 1: Buffering</strong>: Connect to the live WebSocket API and immediately stream raw update messages into an in-memory queue without processing them yet.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Phase 2: Baseline Syncing</strong>: Concurrently hit the REST API endpoint to pull the thick historical snapshot.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Phase 3: The Sequence Match</strong>: Inspect the transaction sequence numbers (Update IDs). Discard all buffered stream messages that are older than the snapshot, identify the exact event that bridges the gap, and fast-forward through the queue.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Phase 4: Integrity Loop</strong>: Process live updates continuously. Every single packet checks that its internal start ID matches the previous packet's end ID + 1. If a packet drops or a gap is detected, the pipeline automatically tears itself down and restarts.</div></div>
+    </div>
+  </p>
+  <br>
+
+  <h3 class="text-lg font-bold mb-2 text-white">The Core Metric: Order Book Imbalance (OBI)</h3>
+  <p class="mb-6 leading-relaxed">
+    Once the local book is perfectly synchronized, the backend calculates <strong>Order Book Imbalance (OBI)</strong> across all 100 deep layers of the book using the standard quantitative finance formula:
+    <div class="my-4 p-4 bg-white/5 rounded-md text-center font-mono text-white text-base">
+      OBI = (Bid Volume - Ask Volume) / (Bid Volume + Ask Volume)
+    </div>
+    This standardizes market pressure into a clean range between <strong>-1.0 and +1.0</strong>. A highly positive value indicates a massive pool of buyers propping up prices (buying pressure), while a highly negative value signals an overwhelming wall of sellers threatening to push prices down (selling pressure).
+  </p>
+  <br>
+
+  <h3 class="text-lg font-bold mb-2 text-white">Key System Features</h3>
+  <p class="mb-6 leading-relaxed">
+    <div class="mt-2 space-y-2">
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>State Separation</strong>: All data parsing, stitching logic, and quantitative math calculations are hard-isolated on the server-side Python environment. The client's web browser is completely decoupled from exchange traffic.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Zero API Credentials Required</strong>: Fully operational over public financial market data relays, eliminating safety overheads or private API keys.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Event-Driven UI Stream</strong>: Establishes a lightweight WebSocket link between backend and frontend, feeding unified UI updates cleanly to prevent browser rendering stutter.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Rich UI Terminal Visualization</strong>: Implements real-time price ladders, data pipeline step logs, volume divergence bars, and moving line graphs mapping out historical OBI tracking.</div></div>
+    </div>
+  </p>
+  <br>
+
+  <h3 class="text-lg font-bold mb-2 text-white">Tech Stack & Tools</h3>
+  <p class="mb-6 leading-relaxed">
+    Built with <strong>Python 3.12+</strong> (FastAPI, WebSockets, HTTPX Async Client, Uvicorn ASGI backend) and modern frontend components (Vanilla JS, Tailwind CSS, <strong>Chart.js</strong> engine). Project environments are controlled natively using the <strong>uv</strong> package manager for lightning-fast lockfile resolution.
+  </p>
+  <br>
+
+  <a href="https://github.com/yeojustin/Local-Binance-Spot-Order-Book" target="_blank" class="mt-4 text-white font-bold underline hover:text-gray-300 transition-colors"> Visit the Github Repo </a>
+</div>ß

@@ -66,6 +66,21 @@ const portfolioData = {
       appUrl: '',
       githubUrl: 'https://github.com/yeojustin/L2-Order-Book-Quote-Simulator',
       contentFile: 'projects/l2-order-book-quote-simulator.html'
+    },
+    { 
+      type: 'app', 
+      isProject: true,
+      name: 'Binance Local Order Book', 
+      iconEmoji: '📖',
+      category: 'Algorithmic Trading',
+      status: 'Local App',
+      statusColor: 'blue',
+      description: 'A high-velocity market data pipeline to maintain a live, synchronized Binance limit order book. The system precisely merges REST snapshots with continuous WebSocket diff streams to prevent data drift, continuously computing Order Book Imbalance (OBI) to visualize market-making dynamics and order flow pressure on a real-time frontend dashboard.',
+      stack: ['Python', 'REST', 'Websocket', 'FastAPI', 'Algorithmic Trading', 'Vibe Coding'],
+      date: '2026-05-26',
+      appUrl: '',
+      githubUrl: 'https://github.com/yeojustin/Local-Binance-Spot-Order-Book',
+      contentFile: 'projects/binance-local-order-book.html'
     }
   ],
   // profile: [
@@ -107,25 +122,25 @@ Currently exploring Algorithmic trading tools, Agentic Workflows, GenAI, and bui
       <div class="mb-6">
         <h3 class="text-lg font-semibold text-blue-600">Google Cloud</h3>
         <p class="text-gray-500 text-sm">AI/ML Solutions Engineer Trainee</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1">
-          <li>Architected an internal agentic AI solution.</li>
-          <li>Delivered PRD + Google ADK architecture + GTM strategy.</li>
-          <li>Reduced manual workflows by 50% and secured VP-level alignment.</li>
-        </ul>
+        <div class="mt-2 space-y-1">
+          <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> Architected an internal agentic AI solution.</div>
+          <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> Delivered PRD + Google ADK architecture + GTM strategy.</div>
+          <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> Reduced manual workflows by 50% and secured VP-level alignment.</div>
+        </div>
       </div>
       <div class="mb-6">
         <h3 class="text-lg font-semibold text-blue-600">Central Provident Fund Board (CPFB)</h3>
         <p class="text-gray-500 text-sm">Machine Learning Engineer / Data Analytics</p>
-        <ul class="list-disc pl-5 mt-2 space-y-1">
-          <li>Worked on sentiment analysis, topic modeling, and text classification.</li>
-        </ul>
+        <div class="mt-2 space-y-1">
+          <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> Worked on sentiment analysis, topic modeling, and text classification.</div>
+        </div>
       </div>
       <div>
         <h3 class="text-lg font-semibold text-blue-600">Hackathons & Enterprise POCs</h3>
-        <ul class="list-disc pl-5 mt-2 space-y-1">
-          <li>2x hackathon winner (2nd runner-up out of 300+ teams APAC-wide).</li>
-          <li>Delivered 7 enterprise AI POCs for Tier-1 global banks.</li>
-        </ul>
+        <div class="mt-2 space-y-1">
+          <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> 2x hackathon winner (2nd runner-up out of 300+ teams APAC-wide).</div>
+          <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> Delivered 7 enterprise AI POCs for Tier-1 global banks.</div>
+        </div>
       </div>
     </div>`
   },

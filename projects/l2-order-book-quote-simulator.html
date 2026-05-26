@@ -10,11 +10,11 @@
   <h3 class="text-lg font-bold mb-2 text-white">How It Works</h3>
   <p class="mb-6 leading-relaxed">
     The simulator bridges real market data with a local execution engine:
-    <ul class="list-disc list-inside mt-2 space-y-2 text-gray-300">
-      <li><strong>Live Sync:</strong> It maintains a local Binance Spot L2 order book by pulling an initial REST snapshot and applying WebSocket depth diffs on top of it.</li>
-      <li><strong>Simulation:</strong> It runs a local simulation on that live book. It computes order book imbalance (OBI), generates virtual quotes, tracks theoretical inventory, and processes fake fills whenever the quotes cross the real touch price.</li>
-      <li><strong>Terminal UI:</strong> Everything is visualized in the terminal using <code class="bg-white/10 px-1.5 py-0.5 rounded text-xs text-pink-300">Rich</code>, giving a clear, tick-by-tick view of the order book and the simulated trades.</li>
-    </ul>
+    <div class="mt-2 space-y-2 text-gray-300">
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Live Sync:</strong> It maintains a local Binance Spot L2 order book by pulling an initial REST snapshot and applying WebSocket depth diffs on top of it.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Simulation:</strong> It runs a local simulation on that live book. It computes order book imbalance (OBI), generates virtual quotes, tracks theoretical inventory, and processes fake fills whenever the quotes cross the real touch price.</div></div>
+      <div class="flex items-start"><span class="text-gray-500 mr-2">—</span> <div><strong>Terminal UI:</strong> Everything is visualized in the terminal using <code class="bg-white/10 px-1.5 py-0.5 rounded text-xs text-pink-300">Rich</code>, giving a clear, tick-by-tick view of the order book and the simulated trades.</div></div>
+    </div>
   </p>
   <br></br>
   <h3 class="text-lg font-bold mb-2 text-white">Under the Hood</h3>
